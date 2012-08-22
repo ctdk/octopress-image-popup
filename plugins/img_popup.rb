@@ -114,7 +114,7 @@ module Jekyll
       if config['image_resize_size'] && (@percent.to_i < resize_percentage) && image_stat.size > (config['image_resize_size'] * 1024)
 	thumbnail_path = image_path.sub(/\.([^\.]+)$/, "_small.\\1")
 	image.write thumbnail_path
-	vars['scaled_image'] = "/#{thumbnail_path}"
+	vars['scaled_image'] = @path.sub(/\.([^\.]+)$/, "_small.\\1")
       else
 	vars['scaled_image'] = image_path
       end
