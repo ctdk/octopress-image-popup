@@ -14,6 +14,14 @@
 #     The image path is relative to "source". The second parameter is the scale
 #     percentage. The third parameter is a title for the popup.
 #
+#     To use the image resizing functionality, set image_resize_size in
+#     in _config.yml to the minimum size, in KB, a file has to be before it will
+#     be resized. You may also set a maximum resize percentage with 
+#     image_resize_percent_limit, so that (for example) if 
+#     image_resize_percent_limit were set to 80, specifying 90% would leave the
+#     image alone. You must set a minimum file resizing size however if you want
+#     the images resized, even if that file size is 0.
+#
 # CSS:
 #
 # To control what's shown on the screen versus what's shown when the article
@@ -26,6 +34,7 @@
 # To use this plugin, you'll need:
 #
 # - the mini_magick gem (in the Gemfile)
+# - the erubis gem (in the Gemfile)
 # - the Image Magick tool kit's mogrify(1) command installed on your system
 #   and in the PATH
 # - jQuery (in source/javascripts and in your head.html)
@@ -101,12 +110,13 @@ module Jekyll
       # Don't resize the image if image_resize_size is nil or the percentage to
       # resize is less than image_resize_percent_limit in _config.yml
       image_stat = File.stat(image_path)
-      if config['image_resize_size'] && (@percent < config['image_resize_percent_limit']) && image_stat.size > (config['image_resize_size'] * 1024)
+      resize_percentage = config['image_resize_percent_limit'] || 101
+      if config['image_resize_size'] && (@percent.to_i < resize_percentage) && image_stat.size > (config['image_resize_size'] * 1024)
 	thumbnail_path = image_path.sub(/\.([^\.]+)$/, "_small.\\1")
 	image.write thumbnail_path
-	var['scaled_path'] = "/#{thumbnail_path}"
+	vars['scaled_image'] = "/#{thumbnail_path}"
       else
-	var['scaled_path'] = image_path
+	vars['scaled_image'] = image_path
       end
 
       safe_wrap(@template.result(vars))

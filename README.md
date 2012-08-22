@@ -36,6 +36,11 @@ put in the title bar of the modal popup. Here’s a real example:
 
     {% imgpopup /images/bigimage.png 50% My Big Image %}
 
+To use the image resizing functionality, set image_resize_size in in _config.yml to the minimum size, in KB, a file has to be before it will be resized. You may also set a maximum resize percentage with image_resize_percent_limit, so that (for example) if image_resize_percent_limit were set to 80, specifying 90% would leave the image alone. You must set a minimum file resizing size however if you want the images resized, even if that file size is 0. The example below would set image_resize_size to 50KB, and image_resize_percent_limit to 80%:
+
+image_resize_size: 50
+image_resize_percent_limit: 80
+
 ## License
 
 This plugin is licensed under a [3 clause BSD license][bsd-license]
