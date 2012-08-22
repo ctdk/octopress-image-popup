@@ -77,6 +77,7 @@ module Jekyll
 
     def render(context)
       source = Pathname.new(context.registers[:site].source).expand_path
+      config = context.registers[:site].config
 
       # Calculate the full path to the source image.
       image_path = source + @path.sub(%r{^/}, '')

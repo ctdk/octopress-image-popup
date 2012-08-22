@@ -36,6 +36,11 @@ put in the title bar of the modal popup. Here’s a real example:
 
     {% imgpopup /images/bigimage.png 50% My Big Image %}
 
+## License
+
+This plugin is licensed under a [3 clause BSD license][bsd-license]
+
 [blog-image-popup]: http://brizzled.clapper.org/blog/2012/02/05/a-simple-octopress-image-popup-plugin/
 [Octopress]: http://octopress.org/
 [Liquid]: https://github.com/Shopify/liquid
+[bsd-license]: http://opensource.org/licenses/BSD-3-Clause
