@@ -97,6 +97,18 @@ module Jekyll
       vars['scaled_width'] = image[:width]
       vars['scaled_height'] = image[:height]
 
+      # Are we resizing the image?
+      # Don't resize the image if image_resize_size is nil or the percentage to
+      # resize is less than image_resize_percent_limit in _config.yml
+      image_stat = File.stat(image_path)
+      if config['image_resize_size'] && (@percent < config['image_resize_percent_limit']) && image_stat.size > (config['image_resize_size'] * 1024)
+	thumbnail_path = image_path.sub(/\.([^\.]+)$/, "_small.\\1")
+	image.write thumbnail_path
+	var['scaled_path'] = "/#{thumbnail_path}"
+      else
+	var['scaled_path'] = image_path
+      end
+
       safe_wrap(@template.result(vars))
     end
   end
