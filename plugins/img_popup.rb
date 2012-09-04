@@ -90,6 +90,8 @@ module Jekyll
 
       # Calculate the full path to the source image.
       image_path = source + @path.sub(%r{^/}, '')
+      thumbnail_path = source + "thumb/" + @path.sub(%r{^/}, '')
+      FileUtils.mkdir_p(File.dirname(thumbnail_path))
 
       @@id += 1
       vars = {
@@ -112,11 +114,14 @@ module Jekyll
       image_stat = File.stat(image_path)
       resize_percentage = config['image_resize_percent_limit'] || 101
       if config['image_resize_size'] && (@percent.to_i < resize_percentage) && image_stat.size > (config['image_resize_size'] * 1024)
-	thumbnail_path = image_path.sub(/\.([^\.]+)$/, "_small.\\1")
-	image.write thumbnail_path
-	vars['scaled_image'] = @path.sub(/\.([^\.]+)$/, "_small.\\1")
+	# No longer will we regenerate the thumbnail if it's present unless said
+	# thumbnail is older than the original image
+	if !File.exists?(thumbnail_path) || File.stat(thumbnail_path).mtime < image_stat.mtime
+	  image.write thumbnail_path
+	end
+	vars['scaled_image'] = "/thumb" + @path
       else
-	vars['scaled_image'] = image_path
+	vars['scaled_image'] = @path
       end
 
       safe_wrap(@template.result(vars))
